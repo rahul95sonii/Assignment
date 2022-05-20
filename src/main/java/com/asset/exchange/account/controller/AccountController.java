@@ -56,4 +56,66 @@ public class AccountController {
 
     }
 
+    @PostMapping("/acctranscation")
+    public ResponseEntity<?> fromAccountToAccount(@RequestBody Transactions trx) {
+
+        Account acc = accountService.findByAccountNumber(trx.getToAccountNumber());
+        Account acc1 = accountService.findByAccountNumber(trx.getFromAccountNumber());
+        double toBal = acc.getAccountBalance();
+        double fromBal = acc1.getAccountBalance();
+        double prevBal = acc.getAccountBalance();
+        double txnBal = Double.parseDouble(trx.getAmount());
+
+        String acc_assettype = acc.getToasset_type();
+        String des_assettype = trx.getAssetType();
+        String toBalance = String.valueOf(prevBal - Double.parseDouble(trx.getAmount()));
+        double trnBalance = Double.parseDouble(trx.getAmount());
+        if(acc.getAccountBalance()>0) {
+            //Transaction in Between Two Accounts
+            acc.setAccountBalance(prevBal - Double.parseDouble(trx.getAmount()));
+
+            accountService.updateBalance(acc);
+            acc1.setAccountBalance(txnBal);
+            accountService.updateBalance(acc1);
+            return ResponseEntity.ok().body("From Account Transaction Done");
+        }
+        if (acc_assettype.equals(des_assettype))
+        {
+            accountService.transferAmount(trx.getToAccountNumber(), trx.getFromAccountNumber(), toBalance, trx.getAmount() );
+        }
+        else if (acc_assettype.equals("USD") && des_assettype.equals("BTC") )
+        {
+            double result=0.000034*Double.parseDouble(trx.getAmount());
+            accountService.transferAmount(trx.getToAccountNumber(), trx.getFromAccountNumber(),toBalance, trx.getAmount());
+        }
+
+        else if (acc_assettype.equals("BTC") && des_assettype.equals("USD") )
+        {
+            double result=29842.80*Double.parseDouble(trx.getAmount());
+            accountService.transferAmount(trx.getToAccountNumber(), trx.getFromAccountNumber(), toBalance, trx.getAmount() );
+        }
+
+        else if (acc_assettype.equals("ETH") && des_assettype.equals("USD") )
+        {
+            double result=2023.14*Double.parseDouble(trx.getAmount());
+            accountService.transferAmount(trx.getToAccountNumber(), trx.getFromAccountNumber(), toBalance, trx.getAmount() );
+        }
+        else if (acc_assettype.equals("ETH") && des_assettype.equals("BTC") )
+        {
+            double result=0.06864*Double.parseDouble(trx.getAmount());
+            accountService.transferAmount(trx.getToAccountNumber(), trx.getFromAccountNumber(), toBalance, trx.getAmount() );
+        }
+        else if (acc_assettype.equals("BTC") && des_assettype.equals("ETH") )
+        {
+            double result=14.80*Double.parseDouble(trx.getAmount());
+            accountService.transferAmount(trx.getToAccountNumber(), trx.getFromAccountNumber(), toBalance, trx.getAmount() );
+        }
+        else if (acc_assettype.equals("USD") && des_assettype.equals("ETH") )
+        {
+            double result=0.00050*Double.parseDouble(trx.getAmount());
+            accountService.transferAmount(trx.getToAccountNumber(), trx.getFromAccountNumber(), toBalance, trx.getAmount() );
+        }
+        //return "amount transferred succesfully";
+        return ResponseEntity.ok().body("From Account Transaction Done");
+    }
 }

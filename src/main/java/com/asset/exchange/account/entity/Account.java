@@ -42,4 +42,24 @@ public class Account {
     public void setId(long id) {
         this.id = id;
     }
+
+    private String Toasset_type;
+
+    private String Asset_Type;
+
+    public String getToasset_type() {
+        return Toasset_type;
+    }
+
+    public void setToasset_type(String toasset_type) {
+        Toasset_type = toasset_type;
+    }
+
+    public String getAsset_Type() {
+        return Asset_Type;
+    }
+
+    public void setAsset_Type(String asset_Type) {
+        Asset_Type = asset_Type;
+    }
 }

@@ -32,4 +32,10 @@ public class AccountServiceImpl implements AccountService{
     public void updateBalance(Account acc) {
         accountRepo.updateBalance(acc.getAccountBalance(),acc.getAccountNumber());
     }
+
+    @Override
+    public void transferAmount(String toAcc, String frAcc, String toBalance, String amount) {
+        accountRepo.updateBalance(Double.parseDouble(toBalance),toAcc);
+        accountRepo.updateBalance(Double.parseDouble(amount),frAcc);
+    }
 }
